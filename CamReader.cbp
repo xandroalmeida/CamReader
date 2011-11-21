@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="CamReader" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\CamReader" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\CamReader" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="..\opencv_mingw\install\include\opencv" />
+			<Add directory="..\opencv_mingw\install\include" />
+		</Compiler>
+		<Linker>
+			<Add library="..\opencv_mingw\install\lib\libopencv_core231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_flann231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_imgproc231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_highgui231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_ml231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_video231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_objdetect231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_features2d231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_calib3d231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_legacy231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_contrib231d.a" />
+			<Add library="..\opencv_mingw\install\lib\libopencv_core231d.a" />
+			<Add library="..\..\MinGW\lib\libgdi32.a" />
+			<Add library="..\..\MinGW\lib\libcomctl32.a" />
+			<Add library="..\..\MinGW\lib\libcomdlg32.a" />
+			<Add library="..\..\MinGW\lib\libuuid.a" />
+			<Add library="..\..\MinGW\lib\liboleaut32.a" />
+			<Add library="..\..\MinGW\lib\libole32.a" />
+			<Add library="..\..\MinGW\lib\libavifil32.a" />
+			<Add library="..\..\MinGW\lib\libavicap32.a" />
+			<Add library="..\..\MinGW\lib\libvfw32.a" />
+			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\libzlibd.a" />
+			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\liblibtiffd.a" />
+			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\liblibjasperd.a" />
+			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\liblibjpegd.a" />
+			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\liblibpngd.a" />
+		</Linker>
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
