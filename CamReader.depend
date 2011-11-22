@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1321897240 source:c:\projetos\camreader\main.cpp
+1321976915 source:c:\projetos\camreader\main.cpp
 	"opencv2/highgui/highgui.hpp"
 	"opencv2/imgproc/imgproc.hpp"
 	<ctype.h>
 	<stdio.h>
 	<iostream>
+	<fstream>
 
 1313159604 c:\projetos\opencv_mingw\install\include\opencv2\highgui\highgui.hpp
 	"opencv2/core/core.hpp"

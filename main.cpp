@@ -35,9 +35,7 @@ void onChangeParam(int, void*)
     fout.write((char *)(&blockSize), sizeof(blockSize));
     fout.write((char *)(&thresholdC), sizeof(thresholdC));
     fout.write((char *)(&ksize), sizeof(ksize));
-
     fout.close();
-
 }
 
 void help()
@@ -49,40 +47,37 @@ int main( int argc, char** argv )
 {
     readParam();
     VideoCapture cap;
+
     help();
 
-    if( argc == 1 || (argc == 2 && strlen(argv[1]) == 1 && isdigit(argv[1][0])))
-        cap.open(argc == 2 ? argv[1][0] - '0' : 0);
-    else if( argc >= 2 )
-    {
-        cap.open(argv[1]);
-        if( cap.isOpened() )
-            cout << "Video " << argv[1] <<
+    cap.open(0);
+    if( cap.isOpened() ) {
+        cout << "Video " << 0 <<
                 ": width=" << cap.get(CV_CAP_PROP_FRAME_WIDTH) <<
                 ", height=" << cap.get(CV_CAP_PROP_FRAME_HEIGHT) <<
-                ", nframes=" << cap.get(CV_CAP_PROP_FRAME_COUNT) << endl;
-        if( argc > 2 && isdigit(argv[2][0]) )
-        {
-            int pos;
-            sscanf(argv[2], "%d", &pos);
-            cout << "seeking to frame #" << pos << endl;
-            cap.set(CV_CAP_PROP_POS_FRAMES, pos);
-        }
-    }
+                ", nframes=" << cap.get(CV_CAP_PROP_FRAME_COUNT) <<
+                ", fps=" << cap.get(CV_CAP_PROP_FPS) <<
+                ", format=" << cap.get(CV_CAP_PROP_FORMAT) <<
+                ", mode=" << cap.get(CV_CAP_PROP_MODE) <<
+                ", ratio=" << cap.get(CV_CAP_PROP_POS_AVI_RATIO) <<
 
-    if( !cap.isOpened() )
-    {
+                endl;
+    } else {
         cout << "Could not initialize capturing...\n";
         return -1;
     }
 
-    namedWindow( "Controls", 0 );
+
+    namedWindow( "Controls", CV_WINDOW_NORMAL|CV_GUI_EXPANDED );
     createTrackbar( "Alpha", "Controls", &alpha, 15, onChangeParam );
     createTrackbar("blockSize Threshold", "Controls", &blockSize, 200, onChangeParam);
     createTrackbar("thresholdC Threshold", "Controls", &thresholdC, 50, onChangeParam);
     createTrackbar("ksize", "Controls", &ksize, 50, onChangeParam);
 
-    Mat result, gray,threshold, smooth;
+    Mat result, gray,threshold, smooth, K;
+    Mat kern = (Mat_<char>(3,3) <<  0, -1, 0,
+                                    -1, 5, -1,
+0                                   , -1, 0);
     for(;;)
     {
         Mat frame;
@@ -96,15 +91,19 @@ int main( int argc, char** argv )
         cvtColor(smooth, gray, CV_BGR2GRAY);
         adaptiveThreshold(gray, threshold, 255,ADAPTIVE_THRESH_GAUSSIAN_C , CV_THRESH_BINARY, (blockSize+2)|1 ,thresholdC);
 
-        imshow(winname, threshold);
+        filter2D(frame, K, frame.depth(), kern );
+        //mshow(winname, threshold);
         imshow("Original", frame);
-        imshow("Scaled", result);
-        imshow("Gray", gray);
-        imshow("Smooth", smooth);
+        //imshow("Scaled", result);
+        //imshow("Gray", gray);
+        //imshow("Smooth", smooth);
+        imshow("K", K);
+
 
         int c = waitKey(30);
         if( c == 'q' || c == 'Q' || (c & 255) == 27 )
             break;
+
     }
 
     return 0;
