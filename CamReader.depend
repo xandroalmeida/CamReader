@@ -66,7 +66,7 @@
 	"opencv2/core/core_c.h"
 	"opencv2/imgproc/types_c.h"
 
-1321929618 source:c:\users\alexandro\projetos\camreader\main.cpp
+1321929759 source:c:\users\alexandro\projetos\camreader\main.cpp
 	"opencv2/highgui/highgui.hpp"
 	"opencv2/imgproc/imgproc.hpp"
 	<ctype.h>

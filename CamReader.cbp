@@ -31,36 +31,36 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="..\opencv_mingw\install\include\opencv" />
-			<Add directory="..\opencv_mingw\install\include" />
+			<Add directory="C:\opt\opencv_mingw32\install\include\opencv" />
+			<Add directory="C:\opt\opencv_mingw32\install\include" />
 		</Compiler>
 		<Linker>
-			<Add library="..\opencv_mingw\install\lib\libopencv_core231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_flann231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_imgproc231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_highgui231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_ml231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_video231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_objdetect231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_features2d231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_calib3d231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_legacy231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_contrib231d.a" />
-			<Add library="..\opencv_mingw\install\lib\libopencv_core231d.a" />
-			<Add library="..\..\MinGW\lib\libgdi32.a" />
-			<Add library="..\..\MinGW\lib\libcomctl32.a" />
-			<Add library="..\..\MinGW\lib\libcomdlg32.a" />
-			<Add library="..\..\MinGW\lib\libuuid.a" />
-			<Add library="..\..\MinGW\lib\liboleaut32.a" />
-			<Add library="..\..\MinGW\lib\libole32.a" />
-			<Add library="..\..\MinGW\lib\libavifil32.a" />
-			<Add library="..\..\MinGW\lib\libavicap32.a" />
-			<Add library="..\..\MinGW\lib\libvfw32.a" />
-			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\libzlibd.a" />
-			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\liblibtiffd.a" />
-			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\liblibjasperd.a" />
-			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\liblibjpegd.a" />
-			<Add library="..\opencv_mingw\install\share\OpenCV\3rdparty\lib\liblibpngd.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_core231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_flann231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_imgproc231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_highgui231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_ml231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_video231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_objdetect231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_features2d231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_calib3d231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_legacy231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_contrib231.a" />
+			<Add library="C:\opt\opencv_mingw32\install\lib\libopencv_core231.a" />
+			<Add library="C:\QtSDK\mingw\lib\libgdi32.a" />
+			<Add library="C:\QtSDK\mingw\lib\libcomctl32.a" />
+			<Add library="C:\QtSDK\mingw\lib\libcomdlg32.a" />
+			<Add library="C:\QtSDK\mingw\lib\libuuid.a" />
+			<Add library="C:\QtSDK\mingw\lib\liboleaut32.a" />
+			<Add library="C:\QtSDK\mingw\lib\libole32.a" />
+			<Add library="C:\QtSDK\mingw\lib\libavifil32.a" />
+			<Add library="C:\QtSDK\mingw\lib\libavicap32.a" />
+			<Add library="C:\QtSDK\mingw\lib\libvfw32.a" />
+			<Add library="C:\opt\opencv_mingw32\install\share\OpenCV\3rdparty\lib\libzlib.a" />
+			<Add library="C:\opt\opencv_mingw32\install\share\OpenCV\3rdparty\lib\liblibtiff.a" />
+			<Add library="C:\opt\opencv_mingw32\install\share\OpenCV\3rdparty\lib\liblibjasper.a" />
+			<Add library="C:\opt\opencv_mingw32\install\share\OpenCV\3rdparty\lib\liblibjpeg.a" />
+			<Add library="C:\opt\opencv_mingw32\install\share\OpenCV\3rdparty\lib\liblibpng.a" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
