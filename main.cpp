@@ -4,23 +4,50 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <iostream>
+#include <fstream>
 
 using namespace cv;
 using namespace std;
 
 #define winname "CamReaderTest"
+int alpha = 3;
+int blockSize  = 50;
+int thresholdC = 10;
+int ksize = 15;
+
+void readParam()
+{
+    ifstream fin("data.bin", ios::in | ios::binary);
+    if (fin) {
+        fin.read((char*)&alpha, sizeof(alpha));
+        fin.read((char*)&blockSize, sizeof(blockSize));
+        fin.read((char*)&thresholdC, sizeof(thresholdC));
+        fin.read((char*)&ksize, sizeof(ksize));
+        fin.close();
+    }
+}
+
+void onChangeParam(int, void*)
+{
+    ofstream fout;
+    fout.open("data.bin", ios::out | ios::binary);
+    fout.write((char *)(&alpha), sizeof(alpha));
+    fout.write((char *)(&blockSize), sizeof(blockSize));
+    fout.write((char *)(&thresholdC), sizeof(thresholdC));
+    fout.write((char *)(&ksize), sizeof(ksize));
+
+    fout.close();
+
+}
 
 void help()
 {
 	cout << "Este software tem apenas o proposito de demonstracao" << endl;
 }
 
-int alpha = 3;
-int blockSize  = 50;
-int thresholdC = 100;
-
 int main( int argc, char** argv )
 {
+    readParam();
     VideoCapture cap;
     help();
 
@@ -49,12 +76,13 @@ int main( int argc, char** argv )
         return -1;
     }
 
-    namedWindow( winname, 0 );
-    createTrackbar( "Alpha", winname, &alpha, 15, 0 );
-    createTrackbar("blockSize Threshold", winname, &blockSize, 200);
-    createTrackbar("thresholdC Threshold", winname, &thresholdC, 200);
+    namedWindow( "Controls", 0 );
+    createTrackbar( "Alpha", "Controls", &alpha, 15, onChangeParam );
+    createTrackbar("blockSize Threshold", "Controls", &blockSize, 200, onChangeParam);
+    createTrackbar("thresholdC Threshold", "Controls", &thresholdC, 50, onChangeParam);
+    createTrackbar("ksize", "Controls", &ksize, 50, onChangeParam);
 
-    Mat result, gray,threshold;
+    Mat result, gray,threshold, smooth;
     for(;;)
     {
         Mat frame;
@@ -62,12 +90,17 @@ int main( int argc, char** argv )
         if( frame.empty() )
             break;
 
-        int ksize = (alpha*5)|1;
         convertScaleAbs(frame, result, (alpha+1)*0.25);
-        cvtColor(result, gray, CV_BGR2GRAY);
-        adaptiveThreshold(gray, threshold, 255,ADAPTIVE_THRESH_GAUSSIAN_C , CV_THRESH_BINARY, (blockSize % 2 == 0 ? blockSize +1 : blockSize),thresholdC-100);
+        medianBlur(result, smooth, ksize|1);
+
+        cvtColor(smooth, gray, CV_BGR2GRAY);
+        adaptiveThreshold(gray, threshold, 255,ADAPTIVE_THRESH_GAUSSIAN_C , CV_THRESH_BINARY, (blockSize+2)|1 ,thresholdC);
 
         imshow(winname, threshold);
+        imshow("Original", frame);
+        imshow("Scaled", result);
+        imshow("Gray", gray);
+        imshow("Smooth", smooth);
 
         int c = waitKey(30);
         if( c == 'q' || c == 'Q' || (c & 255) == 27 )
