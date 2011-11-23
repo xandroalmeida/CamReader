@@ -26,7 +26,6 @@
 					<Add library="$(#opencv_home)\lib\libopencv_calib3d231d.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_legacy231d.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_contrib231d.a" />
-					<Add library="$(#opencv_home)\lib\libopencv_core231d.a" />
 					<Add library="$(#mingw_home)\lib\libgdi32.a" />
 					<Add library="$(#mingw_home)\lib\libcomctl32.a" />
 					<Add library="$(#mingw_home)\lib\libcomdlg32.a" />
@@ -64,6 +63,7 @@
 					<Add library="$(#opencv_home)\lib\libopencv_calib3d231.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_legacy231.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_contrib231.a" />
+					<Add library="$(#opencv_home)\lib\libopencv_core231.a" />
 					<Add library="$(#mingw_home)\lib\libgdi32.a" />
 					<Add library="$(#mingw_home)\lib\libcomctl32.a" />
 					<Add library="$(#mingw_home)\lib\libcomdlg32.a" />

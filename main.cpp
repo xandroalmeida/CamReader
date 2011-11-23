@@ -9,33 +9,25 @@
 using namespace cv;
 using namespace std;
 
-#define winname "CamReaderTest"
-int alpha = 3;
-int blockSize  = 50;
-int thresholdC = 10;
-int ksize = 15;
-
 void readParam()
 {
+/*
     ifstream fin("data.bin", ios::in | ios::binary);
     if (fin) {
-        fin.read((char*)&alpha, sizeof(alpha));
-        fin.read((char*)&blockSize, sizeof(blockSize));
-        fin.read((char*)&thresholdC, sizeof(thresholdC));
-        fin.read((char*)&ksize, sizeof(ksize));
+        fin.read((char*)&value, sizeof(value));
         fin.close();
     }
+*/
 }
 
 void onChangeParam(int, void*)
 {
+    /*
     ofstream fout;
     fout.open("data.bin", ios::out | ios::binary);
-    fout.write((char *)(&alpha), sizeof(alpha));
-    fout.write((char *)(&blockSize), sizeof(blockSize));
-    fout.write((char *)(&thresholdC), sizeof(thresholdC));
-    fout.write((char *)(&ksize), sizeof(ksize));
+    fout.write((char *)(&value), sizeof(value));
     fout.close();
+*/
 }
 
 void help()
@@ -67,17 +59,7 @@ int main( int argc, char** argv )
         return -1;
     }
 
-
-    namedWindow( "Controls", CV_WINDOW_NORMAL|CV_GUI_EXPANDED );
-    createTrackbar( "Alpha", "Controls", &alpha, 15, onChangeParam );
-    createTrackbar("blockSize Threshold", "Controls", &blockSize, 200, onChangeParam);
-    createTrackbar("thresholdC Threshold", "Controls", &thresholdC, 50, onChangeParam);
-    createTrackbar("ksize", "Controls", &ksize, 50, onChangeParam);
-
-    Mat result, gray,threshold, smooth, K;
-    Mat kern = (Mat_<char>(3,3) <<  0, -1, 0,
-                                    -1, 5, -1,
-0                                   , -1, 0);
+    Mat result;
     for(;;)
     {
         Mat frame;
@@ -85,20 +67,16 @@ int main( int argc, char** argv )
         if( frame.empty() )
             break;
 
-        convertScaleAbs(frame, result, (alpha+1)*0.25);
-        medianBlur(result, smooth, ksize|1);
+        cvtColor(frame, frame, CV_BGR2GRAY);
+        medianBlur(frame, frame, 3);
 
-        cvtColor(smooth, gray, CV_BGR2GRAY);
-        adaptiveThreshold(gray, threshold, 255,ADAPTIVE_THRESH_GAUSSIAN_C , CV_THRESH_BINARY, (blockSize+2)|1 ,thresholdC);
+        Scalar mean;
+        Scalar stddev;
 
-        filter2D(frame, K, frame.depth(), kern );
-        //mshow(winname, threshold);
+        meanStdDev(frame, mean, stddev);
+        threshold(frame, frame, (int)mean[0]-7*(int)(stddev[0]/8), 255, CV_THRESH_BINARY_INV);
+
         imshow("Original", frame);
-        //imshow("Scaled", result);
-        //imshow("Gray", gray);
-        //imshow("Smooth", smooth);
-        imshow("K", K);
-
 
         int c = waitKey(30);
         if( c == 'q' || c == 'Q' || (c & 255) == 27 )
