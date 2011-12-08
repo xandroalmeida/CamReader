@@ -67,9 +67,10 @@
 	"opencv2/core/core_c.h"
 	"opencv2/imgproc/types_c.h"
 
-1322009121 source:c:\users\alexandro\projetos\camreader\main.cpp
+1323385279 source:c:\users\alexandro\projetos\camreader\main.cpp
 	"opencv2/highgui/highgui.hpp"
 	"opencv2/imgproc/imgproc.hpp"
+	"MjpegCapture.h"
 	<ctype.h>
 	<stdio.h>
 	<iostream>
@@ -134,4 +135,15 @@
 1313159659 c:\opt\opencv_mingw32\install\include\opencv2\imgproc\types_c.h
 	"opencv2/core/core_c.h"
 	"opencv2/imgproc/types_c.h"
+
+1323385172 source:c:\users\alexandro\projetos\camreader\src\mjpegcapture.cpp
+	"MjpegCapture.h"
+	<iostream>
+	<fstream>
+	<string>
+
+1323385216 c:\users\alexandro\projetos\camreader\include\mjpegcapture.h
+	<winsock2.h>
+	<windows.h>
+	<string>
 

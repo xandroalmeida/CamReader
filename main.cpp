@@ -1,6 +1,8 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
+#include "MjpegCapture.h"
+
 #include <ctype.h>
 #include <stdio.h>
 #include <iostream>
@@ -37,12 +39,36 @@ void help()
 
 int main( int argc, char** argv )
 {
+    MjpegCapture cap("192.168.1.101", 8080, "/videofeed");
+    cap.Open();
+    cap.RequestHeaders();
+
+    int line = 1;
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine();
+
+
+    cap.Close();
+
     readParam();
+#ifdef false
     VideoCapture cap;
 
     help();
 
-    cap.open(0);
+    cap.open("http://192.168.1.101:8087/mjpeg");
     if( cap.isOpened() ) {
         cout << "Video " << 0 <<
                 ": width=" << cap.get(CV_CAP_PROP_FRAME_WIDTH) <<
@@ -59,7 +85,20 @@ int main( int argc, char** argv )
         return -1;
     }
 
+    int threshold1  = 5;
+    int threshold2 = 5;
+    int d = 5;
+    int sigmaColor = 0;
+    int sigmaSpace = 0;
     Mat result;
+    namedWindow("Controle", 0);
+    createTrackbar("threshold1", "Controle", &threshold1, 30);
+    createTrackbar("threshold2", "Controle", &threshold2, 20);
+    createTrackbar("d", "Controle", &d, 20);
+    createTrackbar("sigmaColor", "Controle", &sigmaColor, 100);
+    createTrackbar("sigmaSpace", "Controle", &sigmaSpace, 100);
+
+    Mat bilateral;
     for(;;)
     {
         Mat frame;
@@ -67,22 +106,21 @@ int main( int argc, char** argv )
         if( frame.empty() )
             break;
 
-        cvtColor(frame, frame, CV_BGR2GRAY);
-        medianBlur(frame, frame, 3);
-
-        Scalar mean;
-        Scalar stddev;
-
-        meanStdDev(frame, mean, stddev);
-        threshold(frame, frame, (int)mean[0]-7*(int)(stddev[0]/8), 255, CV_THRESH_BINARY_INV);
-
         imshow("Original", frame);
+
+        bilateralFilter(frame, bilateral, d, sigmaColor/10, sigmaSpace/10);
+        cvtColor(bilateral, frame, CV_RGB2GRAY);
+        imshow("bilateral", frame);
+
+        Canny(frame, frame, threshold1 + 20, threshold1);
+
+        imshow("Saida", frame);
 
         int c = waitKey(30);
         if( c == 'q' || c == 'Q' || (c & 255) == 27 )
             break;
 
     }
-
+#endif
     return 0;
 }

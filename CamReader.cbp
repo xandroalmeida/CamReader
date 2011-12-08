@@ -52,7 +52,6 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="$(#opencv_home)\lib\libopencv_core231.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_flann231.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_imgproc231.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_highgui231.a" />
@@ -84,10 +83,16 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="include" />
 			<Add directory="C:\opt\opencv_mingw32\install\include\opencv" />
 			<Add directory="C:\opt\opencv_mingw32\install\include" />
 		</Compiler>
+		<Linker>
+			<Add library="$(#mingw_home)\lib\libws2_32.a" />
+		</Linker>
+		<Unit filename="include\MjpegCapture.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src\MjpegCapture.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
