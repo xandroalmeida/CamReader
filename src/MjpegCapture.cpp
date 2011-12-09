@@ -34,8 +34,8 @@ private:
 };
 
 
-MjpegCapture::MjpegCapture(const char* host, unsigned int port, const char* path, boost::asio::io_service& io_service):
-    m_host(host), m_port(port), m_path(path), resolver(io_service), socket(io_service)
+MjpegCapture::MjpegCapture(const char* host, unsigned int port, const char* path):
+    m_host(host), m_port(port), m_path(path), io_service(), resolver(io_service), socket(io_service)
 {
 
 }

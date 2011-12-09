@@ -39,8 +39,7 @@ void help()
 
 int main( int argc, char** argv )
 {
-    boost::asio::io_service io_service;
-    MjpegCapture cap("www.sonicit.com.br", 80, "/videofeed", io_service);
+    MjpegCapture cap("www.sonicit.com.br", 80, "/videofeed");
     cap.Open();
     cap.SendRequest();
 
