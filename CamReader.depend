@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1323436989 source:c:\projetos\camreader\main.cpp
+1323438533 source:c:\projetos\camreader\main.cpp
 	"opencv2/highgui/highgui.hpp"
 	"opencv2/imgproc/imgproc.hpp"
 	"MjpegCapture.h"
@@ -155,7 +155,7 @@
 	<string>
 	<boost/algorithm/string/predicate.hpp>
 
-1323438418 c:\projetos\camreader\include\mjpegcapture.h
+1323438690 c:\projetos\camreader\include\mjpegcapture.h
 	<boost/asio.hpp>
 	<string>
 

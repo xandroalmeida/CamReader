@@ -19,8 +19,6 @@ public:
 
 protected:
 private:
-    unsigned long FindHostIP();
-    void FillSockAddr(sockaddr_in *pSockAddr);
     void sendString(const char* str);
     void sendString(std::string &str);
 

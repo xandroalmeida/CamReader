@@ -45,28 +45,6 @@ MjpegCapture::~MjpegCapture()
     Close();
 }
 
-unsigned long MjpegCapture::FindHostIP()
-{
-    HOSTENT *pHostent;
-
-    // Get hostent structure for hostname:
-    if (!(pHostent = gethostbyname(m_host.c_str())))
-        throw HRException("could not resolve hostname.");
-
-    // Extract primary IP address from hostent structure:
-    if (pHostent->h_addr_list && pHostent->h_addr_list[0])
-        return *reinterpret_cast<unsigned long*>(pHostent->h_addr_list[0]);
-
-    return 0;
-}
-
-void MjpegCapture::FillSockAddr(sockaddr_in *pSockAddr)
-{
-    // Set family, port and find IP
-    pSockAddr->sin_family = AF_INET;
-    pSockAddr->sin_port = htons(m_port);
-    pSockAddr->sin_addr.S_un.S_addr = FindHostIP();
-}
 
 void MjpegCapture::sendString(const char* str)
 {
