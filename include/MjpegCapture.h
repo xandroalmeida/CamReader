@@ -1,20 +1,18 @@
 #ifndef MJPEGCAPTURE_H
 #define MJPEGCAPTURE_H
 
-#include <winsock2.h>
-#include <windows.h>
+#include <boost/asio.hpp>
 
 #include <string>
 
 class MjpegCapture
 {
 public:
-    MjpegCapture(const char* host, unsigned int port, const char* path);
+    MjpegCapture(const char* host, unsigned int port, const char* path, boost::asio::io_service& io_service);
     virtual ~MjpegCapture();
 
     bool SendRequest();
     std::string ReadLine();
-    char ReadChar();
 
     bool Open();
     void Close();
@@ -26,14 +24,14 @@ private:
     void sendString(const char* str);
     void sendString(std::string &str);
 
-    char* m_tempBuffer;
     std::string m_host;
     unsigned int m_port;
     std::string m_path;
-    const  int tempBufferMaxSize;
-    int tempBufferSize;
-    SOCKET m_Socket;
-    int tempBufferPos;
+
+    boost::asio::ip::tcp::resolver resolver;
+    boost::asio::ip::tcp::socket socket;
+    boost::asio::streambuf buffer;
+
 };
 
 #endif // MJPEGCAPTURE_H

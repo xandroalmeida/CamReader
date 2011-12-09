@@ -34,20 +34,15 @@ private:
 };
 
 
-MjpegCapture::MjpegCapture(const char* host, unsigned int port, const char* path):
-    m_host(host), m_port(port), m_path(path), tempBufferMaxSize(256)
+MjpegCapture::MjpegCapture(const char* host, unsigned int port, const char* path, boost::asio::io_service& io_service):
+    m_host(host), m_port(port), m_path(path), resolver(io_service), socket(io_service)
 {
-    this->tempBufferPos = tempBufferMaxSize;
-    this->tempBufferSize = this->tempBufferPos;
 
-    this->m_Socket = INVALID_SOCKET;
-    this->m_tempBuffer = (char*)malloc(tempBufferMaxSize);
 }
 
 MjpegCapture::~MjpegCapture()
 {
     Close();
-    free(this->m_tempBuffer);
 }
 
 unsigned long MjpegCapture::FindHostIP()
@@ -75,8 +70,11 @@ void MjpegCapture::FillSockAddr(sockaddr_in *pSockAddr)
 
 void MjpegCapture::sendString(const char* str)
 {
-    if (send(this->m_Socket, str, lstrlen(str), 0)==SOCKET_ERROR)
-        throw HRException("failed to send data.");
+    boost::asio::streambuf request;
+    std::ostream request_stream(&request);
+    request_stream << str;
+    // Send the request.
+    boost::asio::write(socket, request);
 
 }
 
@@ -112,109 +110,24 @@ bool MjpegCapture::SendRequest()
 
 void MjpegCapture::Close()
 {
-    if (this->m_Socket != INVALID_SOCKET)
-    {
-        closesocket(this->m_Socket);
-    }
-
-}
-
-char MjpegCapture::ReadChar()
-{
-
-    if (this->tempBufferPos == EOF)
-        return EOF;
-
-    if (this->tempBufferPos == this->tempBufferSize)
-    {
-        this->tempBufferSize = recv(this->m_Socket, this->m_tempBuffer, sizeof(this->tempBufferSize), 0);
-        if (this->tempBufferSize == 0)
-            this->tempBufferPos = EOF;
-
-        this->tempBufferPos = 0;
-    }
-
-    return this->m_tempBuffer[this->tempBufferPos++];
+    socket.close();
 }
 
 string MjpegCapture::ReadLine()
 {
-    string ret;
-    char c;
-
-    while (true)
-    {
-        c = ReadChar();
-        if (c == EOF)
-        {
-            break;
-        }
-
-        if (c == '\n')
-        {
-            break;
-        }
-
-        ret.append(1, c);
-    }
-
-    if (boost::algorithm::ends_with(ret, "\r"))
-    {
-        ret = ret.substr(0, ret.size()-1);
-    }
-
-    return ret;
+    boost::asio::read_until(socket, buffer, "\r\n");
+    std::istream is(&buffer);
+    std::string line;
+    std::getline(is, line);
+    return line;
 }
 
 bool MjpegCapture::Open()
 {
-    WSADATA wsaData;
     bool hRet = false;
-    if (WSAStartup(MAKEWORD(REQ_WINSOCK_VER,0), &wsaData)==0)
-    {
-        if (LOBYTE(wsaData.wVersion) >= REQ_WINSOCK_VER)
-        {
-
-            cout << "initialized.\n";
-            sockaddr_in	sockAddr = {0};
-
-            try
-            {
-                cout << "Looking up hostname " << m_host << "... ";
-                FillSockAddr(&sockAddr);
-                cout << "found.\n";
-
-                cout << "Creating socket... ";
-                if ((this->m_Socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
-                    throw HRException("could not create socket.");
-                cout << "created.\n";
-
-                cout << "Attempting to connect to " << inet_ntoa(sockAddr.sin_addr)
-                     << ":" << m_port <<  "... ";
-
-                if (connect(this->m_Socket, reinterpret_cast<sockaddr*>(&sockAddr), sizeof(sockAddr))!=0)
-                    throw HRException("could not connect.");
-                cout << "connected.\n";
-
-                hRet = true;
-
-            }
-            catch (HRException e)
-            {
-                cout << e.what() << endl;
-                Close();
-            }
-        }
-        else
-        {
-            cerr << "LOBYTE failed!\n";
-        }
-    }
-    else
-    {
-        cerr << "WSAStartup failed!\n";
-
-    }
+    boost::asio::ip::tcp::resolver::query query(m_host, "http");
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+    boost::asio::connect(socket, endpoint_iterator);
 
     return  hRet;
 }
