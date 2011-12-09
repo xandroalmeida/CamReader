@@ -9,10 +9,10 @@
 class MjpegCapture
 {
 public:
-    MjpegCapture(const char* url, unsigned int port, const char* path);
+    MjpegCapture(const char* host, unsigned int port, const char* path);
     virtual ~MjpegCapture();
 
-    bool RequestHeaders();
+    bool SendRequest();
     std::string ReadLine();
     char ReadChar();
 
@@ -23,9 +23,11 @@ protected:
 private:
     unsigned long FindHostIP();
     void FillSockAddr(sockaddr_in *pSockAddr);
+    void sendString(const char* str);
+    void sendString(std::string &str);
 
     char* m_tempBuffer;
-    std::string m_url;
+    std::string m_host;
     unsigned int m_port;
     std::string m_path;
     const  int tempBufferMaxSize;

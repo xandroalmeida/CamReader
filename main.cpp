@@ -39,36 +39,36 @@ void help()
 
 int main( int argc, char** argv )
 {
-    MjpegCapture cap("192.168.1.101", 8080, "/videofeed");
+    MjpegCapture cap("www.sonicit.com.br", 80, "/videofeed");
     cap.Open();
-    cap.RequestHeaders();
+    cap.SendRequest();
 
     int line = 1;
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
-    cout << line++ << ": " << cap.ReadLine();
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
+    cout << line++ << ": " << cap.ReadLine() << endl;
 
 
     cap.Close();
 
-    readParam();
 #ifdef false
+    readParam();
     VideoCapture cap;
 
     help();
 
-    cap.open("http://192.168.1.101:8087/mjpeg");
+    cap.open(0);
     if( cap.isOpened() ) {
         cout << "Video " << 0 <<
                 ": width=" << cap.get(CV_CAP_PROP_FRAME_WIDTH) <<
@@ -106,15 +106,15 @@ int main( int argc, char** argv )
         if( frame.empty() )
             break;
 
-        imshow("Original", frame);
+        //imshow("Original", frame);
 
         bilateralFilter(frame, bilateral, d, sigmaColor/10, sigmaSpace/10);
         cvtColor(bilateral, frame, CV_RGB2GRAY);
         imshow("bilateral", frame);
 
-        Canny(frame, frame, threshold1 + 20, threshold1);
+ //       Canny(frame, frame, threshold1 + 20, threshold1);
 
-        imshow("Saida", frame);
+   //     imshow("Saida", frame);
 
         int c = waitKey(30);
         if( c == 'q' || c == 'Q' || (c & 255) == 27 )

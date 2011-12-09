@@ -3,6 +3,8 @@
 #include <fstream>
 #include <string>
 
+#include <boost/algorithm/string/predicate.hpp>
+
 
 
 // http://www.daniweb.com/software-development/cpp/threads/313842
@@ -12,22 +14,8 @@ using namespace std;
 static ofstream myfile;
 
 static const int  REQ_WINSOCK_VER   = 2;
-static const char HEAD_REQUEST_PART1[] =
-{
-    //Path to ip camera cgi file
-    //"Get /videofeed HTTP/1.1\r\n"
-    "GET /videofeed HTTP/1.1\r\n"
-    "Host: 192.168.1.101\r\n"// Specify host name used
-    "Accept: text/html;text/plain;"
-};
+
 //------------------------------------------------------------
-static const char HEAD_REQUEST_PART2[] =
-{
-    "\r\n"							// End hostname header from part1
-    "User-agent: Myserver\r\n"      // Specify user agent
-    "Connection: close\r\n" 		// Close connection after response
-    "\r\n"							// Empty line indicating end of request
-};
 
 class HRException
 {
@@ -46,8 +34,8 @@ private:
 };
 
 
-MjpegCapture::MjpegCapture(const char* url, unsigned int port, const char* path):
-    m_url(url), m_port(port), m_path(path), tempBufferMaxSize(256)
+MjpegCapture::MjpegCapture(const char* host, unsigned int port, const char* path):
+    m_host(host), m_port(port), m_path(path), tempBufferMaxSize(256)
 {
     this->tempBufferPos = tempBufferMaxSize;
     this->tempBufferSize = this->tempBufferPos;
@@ -67,7 +55,7 @@ unsigned long MjpegCapture::FindHostIP()
     HOSTENT *pHostent;
 
     // Get hostent structure for hostname:
-    if (!(pHostent = gethostbyname(m_url.c_str())))
+    if (!(pHostent = gethostbyname(m_host.c_str())))
         throw HRException("could not resolve hostname.");
 
     // Extract primary IP address from hostent structure:
@@ -85,21 +73,33 @@ void MjpegCapture::FillSockAddr(sockaddr_in *pSockAddr)
     pSockAddr->sin_addr.S_un.S_addr = FindHostIP();
 }
 
-bool MjpegCapture::RequestHeaders()
+void MjpegCapture::sendString(const char* str)
+{
+    if (send(this->m_Socket, str, lstrlen(str), 0)==SOCKET_ERROR)
+        throw HRException("failed to send data.");
+
+}
+
+void MjpegCapture::sendString(std::string &str)
+{
+    sendString(str.c_str());
+}
+
+bool MjpegCapture::SendRequest()
 {
 
     cout << "Sending request... ";
     try
     {
-        if (send(this->m_Socket, HEAD_REQUEST_PART1, sizeof(HEAD_REQUEST_PART1)-1, 0)==SOCKET_ERROR)
-            throw HRException("failed to send data.");
-        if (send(this->m_Socket, m_url.c_str(), lstrlen(m_url.c_str()), 0)==SOCKET_ERROR)
-            throw HRException("failed to send data.");
+        sendString("GET ");
+        sendString("/");
+        sendString(" HTTP/1.1\r\nHost: ");
+        sendString(this->m_host);
+        sendString("\r\nAccept: text/html;text/plain;");
+        sendString(m_host);
+        sendString("\r\nUser-agent: Myserver\r\nConnection: close\r\n\r\n");
 
-        if (send(this->m_Socket, HEAD_REQUEST_PART2, sizeof(HEAD_REQUEST_PART2)-1, 0)==SOCKET_ERROR)
-            throw HRException("failed to send data.");
         cout << "request sent.\n";
-
     }
     catch (HRException e)
     {
@@ -142,21 +142,29 @@ string MjpegCapture::ReadLine()
     string ret;
     char c;
 
-    while (true) {
+    while (true)
+    {
         c = ReadChar();
-        if (c == EOF) {
+        if (c == EOF)
+        {
+            break;
+        }
+
+        if (c == '\n')
+        {
             break;
         }
 
         ret.append(1, c);
+    }
 
-        if (c == '\n') {
-            break;
-        }
+    if (boost::algorithm::ends_with(ret, "\r"))
+    {
+        ret = ret.substr(0, ret.size()-1);
     }
 
     return ret;
- }
+}
 
 bool MjpegCapture::Open()
 {
@@ -172,7 +180,7 @@ bool MjpegCapture::Open()
 
             try
             {
-                cout << "Looking up hostname " << m_url << "... ";
+                cout << "Looking up hostname " << m_host << "... ";
                 FillSockAddr(&sockAddr);
                 cout << "found.\n";
 
