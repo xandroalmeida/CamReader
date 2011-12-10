@@ -1,3 +1,6 @@
 bin
 obj
 *.bin
+*.depend
+*.layout
+*.cbTemp

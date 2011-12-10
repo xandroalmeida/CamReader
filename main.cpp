@@ -126,7 +126,10 @@ int main( int argc, char** argv )
         Mat frame;
         cap >> frame;
 
-        imshow("bilateral", frame);
+        if (!frame.empty()) {
+            imshow("bilateral", frame);
+        }
+
         int c = waitKey(30);
         if( c == 'q' || c == 'Q' || (c & 255) == 27 )
             break;

@@ -69,7 +69,7 @@
 	"opencv2/core/core_c.h"
 	"opencv2/imgproc/types_c.h"
 
-1323543145 source:c:\users\alexandro\projetos\camreader\main.cpp
+1323554303 source:c:\users\alexandro\projetos\camreader\main.cpp
 	"opencv2/highgui/highgui.hpp"
 	"opencv2/imgproc/imgproc.hpp"
 	"MjpegCapture.h"
@@ -140,7 +140,7 @@
 	"opencv2/core/core_c.h"
 	"opencv2/imgproc/types_c.h"
 
-1323543367 source:c:\users\alexandro\projetos\camreader\src\mjpegcapture.cpp
+1323554303 source:c:\users\alexandro\projetos\camreader\src\mjpegcapture.cpp
 	"MjpegCapture.h"
 	<iostream>
 	<fstream>
@@ -148,7 +148,7 @@
 	<vector>
 	<boost/algorithm/string/predicate.hpp>
 
-1323543045 c:\users\alexandro\projetos\camreader\include\mjpegcapture.h
+1323554303 c:\users\alexandro\projetos\camreader\include\mjpegcapture.h
 	"opencv2/highgui/highgui.hpp"
 	"opencv2/imgproc/imgproc.hpp"
 	<boost/asio.hpp>
