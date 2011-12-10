@@ -15,7 +15,6 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add library="$(#opencv_home)\lib\libopencv_core231d.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_flann231d.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_imgproc231d.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_highgui231d.a" />
@@ -26,6 +25,7 @@
 					<Add library="$(#opencv_home)\lib\libopencv_calib3d231d.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_legacy231d.a" />
 					<Add library="$(#opencv_home)\lib\libopencv_contrib231d.a" />
+					<Add library="$(#opencv_home)\lib\libopencv_core231d.a" />
 					<Add library="$(#mingw_home)\lib\libgdi32.a" />
 					<Add library="$(#mingw_home)\lib\libcomctl32.a" />
 					<Add library="$(#mingw_home)\lib\libcomdlg32.a" />
@@ -40,6 +40,9 @@
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjasperd.a" />
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjpegd.a" />
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibpngd.a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_iostreams-mgw45-mt-d-1_47.a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_system-mgw45-mt-d-1_47.a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_filesystem-mgw45-mt-d-1_47.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -77,22 +80,29 @@
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjasper.a" />
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjpeg.a" />
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibpng.a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_iostreams-mgw45-mt-1_47.a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_system-mgw45-mt-1_47.a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_filesystem-mgw45-mt-1_47.a" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add option="-D_WIN32_WINNT=0x0501" />
 			<Add directory="include" />
-			<Add directory="C:\opt\opencv_mingw32\install\include\opencv" />
-			<Add directory="C:\opt\opencv_mingw32\install\include" />
+			<Add directory="$(#opencv_home)\include\opencv" />
+			<Add directory="$(#opencv_home)\include" />
+			<Add directory="$(#boost_home)" />
 		</Compiler>
 		<Linker>
 			<Add library="$(#mingw_home)\lib\libws2_32.a" />
 		</Linker>
 		<Unit filename="include\MjpegCapture.h" />
+		<Unit filename="include\preprocessing.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src\MjpegCapture.cpp" />
+		<Unit filename="src\preprocessing.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

@@ -8,7 +8,7 @@
 class MjpegCapture
 {
 public:
-    MjpegCapture(const char* host, unsigned int port, const char* path);
+    MjpegCapture(const char* host, std::string port, const char* path);
     virtual ~MjpegCapture();
 
     bool SendRequest();
@@ -23,7 +23,7 @@ private:
     void sendString(std::string &str);
 
     std::string m_host;
-    unsigned int m_port;
+    std::string m_port;
     std::string m_path;
 
     boost::asio::io_service io_service;

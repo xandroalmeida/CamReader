@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="include\MjpegCapture.h" open="1" top="0" tabpos="2">
-		<Cursor position="314" topLine="0" />
+	<File name="include\MjpegCapture.h" open="0" top="0" tabpos="2">
+		<Cursor position="178" topLine="13" />
 	</File>
-	<File name="main.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="782" topLine="35" />
+	<File name="include\preprocessing.h" open="1" top="0" tabpos="2">
+		<Cursor position="16" topLine="0" />
 	</File>
-	<File name="src\MjpegCapture.cpp" open="1" top="1" tabpos="3">
-		<Cursor position="4249" topLine="133" />
+	<File name="main.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="2289" topLine="69" />
+	</File>
+	<File name="src\MjpegCapture.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="2343" topLine="88" />
+	</File>
+	<File name="src\preprocessing.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="0" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

@@ -34,7 +34,7 @@ private:
 };
 
 
-MjpegCapture::MjpegCapture(const char* host, unsigned int port, const char* path):
+MjpegCapture::MjpegCapture(const char* host, std::string port, const char* path):
     m_host(host), m_port(port), m_path(path), io_service(), resolver(io_service), socket(io_service)
 {
 
@@ -68,7 +68,7 @@ bool MjpegCapture::SendRequest()
     try
     {
         sendString("GET ");
-        sendString("/");
+        sendString(m_path);
         sendString(" HTTP/1.1\r\nHost: ");
         sendString(this->m_host);
         sendString("\r\nAccept: text/html;text/plain;");
@@ -103,10 +103,9 @@ string MjpegCapture::ReadLine()
 bool MjpegCapture::Open()
 {
     bool hRet = false;
-    boost::asio::ip::tcp::resolver::query query(m_host, "http");
+    boost::asio::ip::tcp::resolver::query query(m_host, m_port);
     boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
     boost::asio::connect(socket, endpoint_iterator);
 
     return  hRet;
 }
-
