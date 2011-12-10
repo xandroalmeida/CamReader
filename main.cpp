@@ -11,7 +11,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "preprocessing.h"
+#include <preprocessing.h>
 
 using namespace boost::filesystem;
 
@@ -51,7 +51,7 @@ void buildTrainData()
     int size = 16;
     IplImage* src_image;
     IplImage prs_image;
-    path basePath("C:\\Documents and Settings\\saoadalm\\My Documents\\Downloads\\OCR");
+    path basePath("C:\\Users\\Alexandro\\Downloads\\basicOCR\\OCR");
     try
     {
         if (exists(basePath) && is_directory(basePath))      // is p a directory?
@@ -80,8 +80,9 @@ void buildTrainData()
                     src_image = cvLoadImage(fileName.c_str(),0);
                     prs_image = preprocessing(src_image, size, size);
 
-                    for (int i = 0; i < (size*size); i++) {
-                        fout << (prs_image.imageData[i] != -1 ? "1" : "0") << ",";
+                    for (int i = 0; i < (size*size); i++)
+                    {
+                        fout << (prs_image.imageData[i] != -1 ? "1" : "0") << ";";
                         //cout << (prs_image.imageData[i] != -1 ? "X" : " ");
                         //if (((i+1)%size) == 0)
                         //    cout << endl;
@@ -111,31 +112,47 @@ int main( int argc, char** argv )
 {
 #ifdef TESTE
 
-    buildTrainData();
-    return 0;
+    //buildTrainData();
+    //return 0;
 
 
-    MjpegCapture cap("localhost", "8080", "/HP.PhoenixOMC");
+    MjpegCapture cap("192.168.1.100", "8080", "/videofeed");
     cap.Open();
-    cap.SendRequest();
-
-    int line = 1;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
-    cout << line++ << ": " << cap.ReadLine() << endl;
 
 
+    char* buffer;
+    while (true)
+    {
+        Mat frame;
+        cap >> frame;
+
+        imshow("bilateral", frame);
+        int c = waitKey(30);
+        if( c == 'q' || c == 'Q' || (c & 255) == 27 )
+            break;
+
+    }
+
+    /*
+        cap.SendRequest();
+
+        int line = 1;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+        cout << line++ << ": " << cap.ReadLine() << endl;
+
+    */
     cap.Close();
 
 #else
