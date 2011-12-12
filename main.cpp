@@ -2,6 +2,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 
 #include "MjpegCapture.h"
+#include "NumericOCR.h"
 
 #include <ctype.h>
 #include <stdio.h>
@@ -121,203 +122,46 @@ void buildTrainData()
     }
 }
 
-void nn_256_5_3_1(double * inputs, double * outputs);
-void nn_256_7_1(double * inputs, double * outputs);
-
-double digitOCR(Mat& img)
-{
-    IplImage dst_img = img;
-
-    IplImage scaled = preprocessing(&dst_img, 16,16);
-
-    double* nn_inputs = new double[16*16];
-    double* nn_outputs = new double[1];
-
-    for (int i = 0; i < (16*16); i++)
-    {
-        nn_inputs[i] = scaled.imageData[i] == 0 ? 1.0 : 0.0;
-        cout << (nn_inputs[i] == 0.0 ? " " : "X");
-        if (i%16 == 0)
-            cout << endl;
-    }
-
-    cout << endl;
-
-    nn_256_5_3_1(nn_inputs, nn_outputs);
-    double ret = nn_outputs[0];
-
-    delete nn_inputs;
-    delete nn_outputs;
-
-    return ret;
-}
-
-int processa_ocr()
-{
-    const char* inputImage = "ocr.png";
-
-    Mat original = imread(inputImage,0);
-    Mat image = original.clone();
-
-    if(image.empty())
-    {
-        std::cerr << "Cannot read image file: " << inputImage << std::endl;
-        return -1;
-    }
-    //namedWindow( "image", 1 );
-    namedWindow( "contours", 1 );
-    namedWindow( "sel", 1 );
-    namedWindow( "ocr", 1 );
-
-
-    bool fgUpdate = true;
-
-    vector<vector<Point> > contours;
-    vector<Vec4i> hierarchy;
-    //imshow( "image", image );
-
-    vector<vector<Point> > contours0;
-
-    findContours( image, contours0, hierarchy, CV_RETR_TREE, CHAIN_APPROX_SIMPLE);
-    contours.resize(contours0.size());
-    for( size_t k = 0; k < contours0.size(); k++ )
-        approxPolyDP(Mat(contours0[k]), contours[k], 3, true);
-
-    cout << "contours0.size() = " << contours.size() << endl;
-
-    vector<int> digits_contours;
-
-    for( size_t k = 0; k < hierarchy.size(); k++ )
-    {
-        Vec4i h = hierarchy[k];
-        cout << k << " next: " << h[NEXT_CONTOUR] << " previous: "<< h[PREVIOUS_CONTOUR] << " child: " << h[CHILD_CONTOUR] << " parent: " << h[PARENT_CONTOUR] << endl;
-    }
-
-    for( size_t k = 0; k < hierarchy.size(); k++ )
-    {
-        Vec4i h = hierarchy[k];
-        vector<Point> c = contours[k];
-        cout << h[3] << " ";
-        if (h[3] == 0 && contours[k].size() >= 4)
-        {
-            cout << "*";
-            digits_contours.push_back(k);
-        }
-
-        Rect rect = boundingRect(Mat(contours[k]));
-
-        cout << "contour " << k << " : x=" << rect.x << ", y=" << rect.y << endl;
-
-    }
-
-    int idx = 0;
-    while (true)
-    {
-        if (fgUpdate)
-        {
-
-            Mat cnt_img = Mat::zeros(480, 640, CV_8UC3);
-
-            drawContours( cnt_img, contours, digits_contours[idx], Scalar(128,255,255),1, CV_AA, hierarchy, 2 );
-
-            Rect rect = boundingRect(Mat(contours[digits_contours[idx]]));
-            rect.x = rect.x - 5;
-            rect.y = rect.y - 5;
-            rect.width = rect.width + 10;
-            rect.height = rect.height + 10;
-
-            Mat recImg(original, rect);
-
-
-            imshow("contours", cnt_img);
-            imshow("sel", recImg);
-            cout << "OCR: " << digitOCR(recImg) << endl;
-
-            cout << "Window updated with " << idx << endl;
-            idx++;
-            fgUpdate = false;
-        }
-
-        int c = waitKey(30);
-        if( c == 'q' || c == 'Q' || (c & 255) == 27 )
-            break;
-        if( c == 'u' || c == 'U' )
-            fgUpdate = true;
-
-    }
-    return 0;
-}
-
 int main( int argc, char** argv )
 {
     help();
     readParam();
 
-    return processa_ocr();
-
-    //buildTrainData();
-    //return 0;
-
     namedWindow("Controles");
+    namedWindow("Original", 1);
+    namedWindow("Contornos", 1);
 
     createTrackbar("blur_ksize", "Controles", &blur_ksize, 30, onChangeParam);
     createTrackbar("threshold_thresh", "Controles", &threshold_thresh, 200, onChangeParam);
 
 
-    MjpegCapture cap("192.168.1.100", "8080", "/videofeed");
-    cap.Open();
+//    MjpegCapture cap("192.168.1.100", "8080", "/videofeed");
+//    cap.Open();
 
-    int niters = 3;
-    Mat recImg;
+    bool updateImage =true;
+    VideoCapture cap;
+    cap.open(0);
+    Mat thImg;
     while (true)
     {
-        Mat frame;
-        cap >> frame;
+        //Mat original;
+        //cap >> original;
+        Mat original = imread("ocr.png",0);
 
-        if (!frame.empty())
+        imshow("Original", original);
+
+
+        blur(original, original, Size(blur_ksize+1, blur_ksize+1));
+        //cvtColor(original, original, CV_BGR2GRAY);
+        threshold(original, thImg,threshold_thresh,255,THRESH_BINARY) ;
+
+        NumericOCR ocr(thImg);
+        if (updateImage)
         {
-            cvtColor(frame, frame, CV_RGB2GRAY);
-            blur(frame, frame, Size(blur_ksize+1,blur_ksize+1));
-
-            threshold(frame, frame, threshold_thresh, 255, THRESH_BINARY_INV);
-
-            vector<vector<Point> > contours;
-            vector<Vec4i> hierarchy;
-            Mat temp = frame.clone();
-
-            findContours( temp, contours, hierarchy, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE );
-
-            int idx = 0, largestComp = 0;
-            double maxArea = 0;
-            if( contours.size() > 0 )
-            {
-                cout << "Contornos: " << contours.size() << endl;
-                for( ; idx >= 0; idx = hierarchy[idx][0] )
-                {
-                    const vector<Point>& c = contours[idx];
-                    double area = fabs(contourArea(Mat(c)));
-                    if( area > maxArea )
-                    {
-                        maxArea = area;
-                        largestComp = idx;
-                    }
-
-                }
-                Scalar color( 0, 0, 255 );
-                drawContours( frame, contours, largestComp, color, CV_FILLED, 8, hierarchy );
-            }
-            else
-            {
-                cout << "Sem contornos" << endl;
-            }
-            imshow("sel", recImg);
-            imshow("bilateral", frame);
-
-
-
-            //findContours(frame, contours, hierarchy, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE);
-            //approxPolyDP(contours, )
-            //imshow("erode", frame);
+            imshow("Original", original);
+            imshow("threshold", thImg);
+            imshow("Contornos", ocr.drawContours());
+            //updateImage = false;
         }
 
 
@@ -327,7 +171,7 @@ int main( int argc, char** argv )
 
     }
 
-    cap.Close();
+    //cap.Close();
 
     return 0;
 }
