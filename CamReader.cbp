@@ -40,9 +40,9 @@
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjasperd.a" />
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjpegd.a" />
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibpngd.a" />
-					<Add library="$(#boost_home)\stage\lib\libboost_iostreams-mgw44-mt-d-1_48.a" />
-					<Add library="$(#boost_home)\stage\lib\libboost_system-mgw44-mt-d-1_48.a" />
-					<Add library="$(#boost_home)\stage\lib\libboost_filesystem-mgw44-mt-d-1_48.a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_iostreams-$(#cc_version)-mt-d-$(#boost_version).a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_system-$(#cc_version)-mt-d-$(#boost_version).a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_filesystem-$(#cc_version)-mt-d-$(#boost_version).a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -80,9 +80,9 @@
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjasper.a" />
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjpeg.a" />
 					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibpng.a" />
-					<Add library="$(#boost_home)\stage\lib\libboost_iostreams-mgw44-mt-1_48.a" />
-					<Add library="$(#boost_home)\stage\lib\libboost_system-mgw44-mt-1_48.a" />
-					<Add library="$(#boost_home)\stage\lib\libboost_filesystem-mgw44-mt-1_48.a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_iostreams-$(#cc_version)-mt-$(#boost_version).a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_system-$(#cc_version)-mt-$(#boost_version).a" />
+					<Add library="$(#boost_home)\stage\lib\libboost_filesystem-$(#cc_version)-mt-$(#boost_version).a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -99,9 +99,11 @@
 			<Add library="$(#mingw_home)\lib\libws2_32.a" />
 		</Linker>
 		<Unit filename="include\MjpegCapture.h" />
+		<Unit filename="include\NumericOCR.h" />
 		<Unit filename="include\preprocessing.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src\MjpegCapture.cpp" />
+		<Unit filename="src\NumericOCR.cpp" />
 		<Unit filename="src\nn_256-7-1.cpp" />
 		<Unit filename="src\nn_256_5_3_1.cpp" />
 		<Unit filename="src\preprocessing.cpp" />

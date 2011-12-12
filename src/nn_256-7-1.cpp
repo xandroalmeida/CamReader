@@ -19,8 +19,8 @@ void nn_256_7_1(double * inputs, double * outputs) {
 	double hiddenLayer1outputs[7];
 	int c;
 
-	inputs[0] = inputs[0] / 0.000000000000000; /* WARNING: During the training this variable remain always constant */
-	inputs[1] = inputs[1] / 0.000000000000000; /* WARNING: During the training this variable remain always constant */
+	inputs[0] = inputs[0] / 1.000000000000000; /* WARNING: During the training this variable remain always constant */
+	inputs[1] = inputs[1] / 1.000000000000000; /* WARNING: During the training this variable remain always constant */
 	inputs[2] = -1.0 + (inputs[2] - 0.000000000000000) / 0.500000000000000;
 	inputs[3] = -1.0 + (inputs[3] - 0.000000000000000) / 0.500000000000000;
 	inputs[4] = -1.0 + (inputs[4] - 0.000000000000000) / 0.500000000000000;
@@ -51,7 +51,7 @@ void nn_256_7_1(double * inputs, double * outputs) {
 	inputs[29] = -1.0 + (inputs[29] - 0.000000000000000) / 0.500000000000000;
 	inputs[30] = -1.0 + (inputs[30] - 0.000000000000000) / 0.500000000000000;
 	inputs[31] = -1.0 + (inputs[31] - 0.000000000000000) / 0.500000000000000;
-	inputs[32] = inputs[32] / 0.000000000000000; /* WARNING: During the training this variable remain always constant */
+	inputs[32] = inputs[32] / 1.000000000000000; /* WARNING: During the training this variable remain always constant */
 	inputs[33] = -1.0 + (inputs[33] - 0.000000000000000) / 0.500000000000000;
 	inputs[34] = -1.0 + (inputs[34] - 0.000000000000000) / 0.500000000000000;
 	inputs[35] = -1.0 + (inputs[35] - 0.000000000000000) / 0.500000000000000;
