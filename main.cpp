@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
+
 //#include <ofstream>
 
 #include <boost/filesystem.hpp>
@@ -17,26 +19,31 @@ using namespace boost::filesystem;
 
 using namespace cv;
 using namespace std;
+int blur_ksize = 1;
+int threshold_thresh = 1;
+
 
 void readParam()
 {
-    /*
-        ifstream fin("data.bin", ios::in | ios::binary);
-        if (fin) {
-            fin.read((char*)&value, sizeof(value));
-            fin.close();
-        }
-    */
+    ifstream fin("data.bin", ios::in | ios::binary);
+    if (fin)
+    {
+        fin.read((char*)&blur_ksize, sizeof(blur_ksize));
+        fin.read((char*)&threshold_thresh, sizeof(threshold_thresh));
+
+        fin.close();
+    }
 }
+
 
 void onChangeParam(int, void*)
 {
-    /*
     ofstream fout;
     fout.open("data.bin", ios::out | ios::binary);
-    fout.write((char *)(&value), sizeof(value));
+    fout.write((char *)(&blur_ksize), sizeof(blur_ksize));
+    fout.write((char *)(&threshold_thresh), sizeof(threshold_thresh));
+
     fout.close();
-    */
 }
 
 void help()
@@ -110,116 +117,81 @@ void buildTrainData()
 
 int main( int argc, char** argv )
 {
-#ifdef TESTE
+    help();
+    readParam();
 
     //buildTrainData();
     //return 0;
+
+    namedWindow("Controles");
+
+    createTrackbar("blur_ksize", "Controles", &blur_ksize, 30, onChangeParam);
+    createTrackbar("threshold_thresh", "Controles", &threshold_thresh, 200, onChangeParam);
 
 
     MjpegCapture cap("192.168.1.100", "8080", "/videofeed");
     cap.Open();
 
-
-    char* buffer;
+    int niters = 3;
     while (true)
     {
         Mat frame;
         cap >> frame;
 
-        if (!frame.empty()) {
+        if (!frame.empty())
+        {
+            cvtColor(frame, frame, CV_RGB2GRAY);
+            blur(frame, frame, Size(blur_ksize+1,blur_ksize+1));
+
+            threshold(frame, frame, threshold_thresh, 255, THRESH_BINARY_INV);
+
+            vector<vector<Point> > contours;
+            vector<Vec4i> hierarchy;
+            Mat temp = frame.clone();
+
+            findContours( temp, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE );
+
+            int idx = 0, largestComp = 0;
+            double maxArea = 0;
+            if( contours.size() > 0 )
+            {
+                cout << "Contornos: " << contours.size() << endl;
+                for( ; idx >= 0; idx = hierarchy[idx][0] )
+                {
+                    const vector<Point>& c = contours[idx];
+                    double area = fabs(contourArea(Mat(c)));
+                    if( area > maxArea )
+                    {
+                        maxArea = area;
+                        largestComp = idx;
+                    }
+
+                }
+                Scalar color( 0, 0, 255 );
+                drawContours( frame, contours, largestComp, color, CV_FILLED, 8, hierarchy );
+            }
+            else
+            {
+                cout << "Sem contornos" << endl;
+            }
+
             imshow("bilateral", frame);
+
+
+
+            //findContours(frame, contours, hierarchy, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE);
+            //approxPolyDP(contours, )
+            //imshow("erode", frame);
         }
 
+
         int c = waitKey(30);
         if( c == 'q' || c == 'Q' || (c & 255) == 27 )
             break;
 
     }
 
-    /*
-        cap.SendRequest();
-
-        int line = 1;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-        cout << line++ << ": " << cap.ReadLine() << endl;
-
-    */
     cap.Close();
 
-#else
-    readParam();
-    VideoCapture cap;
-
-    help();
-
-    cap.open(0);
-    if( cap.isOpened() )
-    {
-        cout << "Video " << 0 <<
-             ": width=" << cap.get(CV_CAP_PROP_FRAME_WIDTH) <<
-             ", height=" << cap.get(CV_CAP_PROP_FRAME_HEIGHT) <<
-             ", nframes=" << cap.get(CV_CAP_PROP_FRAME_COUNT) <<
-             ", fps=" << cap.get(CV_CAP_PROP_FPS) <<
-             ", format=" << cap.get(CV_CAP_PROP_FORMAT) <<
-             ", mode=" << cap.get(CV_CAP_PROP_MODE) <<
-             ", ratio=" << cap.get(CV_CAP_PROP_POS_AVI_RATIO) <<
-
-             endl;
-    }
-    else
-    {
-        cout << "Could not initialize capturing...\n";
-        return -1;
-    }
-
-    int threshold1  = 5;
-    int threshold2 = 5;
-    int d = 5;
-    int sigmaColor = 0;
-    int sigmaSpace = 0;
-    Mat result;
-    namedWindow("Controle", 0);
-    createTrackbar("threshold1", "Controle", &threshold1, 30);
-    createTrackbar("threshold2", "Controle", &threshold2, 20);
-    createTrackbar("d", "Controle", &d, 20);
-    createTrackbar("sigmaColor", "Controle", &sigmaColor, 100);
-    createTrackbar("sigmaSpace", "Controle", &sigmaSpace, 100);
-
-    Mat bilateral;
-    for(;;)
-    {
-        Mat frame;
-        cap >> frame;
-        if( frame.empty() )
-            break;
-
-        //imshow("Original", frame);
-
-        bilateralFilter(frame, bilateral, d, sigmaColor/10, sigmaSpace/10);
-        cvtColor(bilateral, frame, CV_RGB2GRAY);
-        imshow("bilateral", frame);
-
-//       Canny(frame, frame, threshold1 + 20, threshold1);
-
-        //     imshow("Saida", frame);
-
-        int c = waitKey(30);
-        if( c == 'q' || c == 'Q' || (c & 255) == 27 )
-            break;
-
-    }
-#endif
     return 0;
 }

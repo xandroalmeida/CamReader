@@ -103,6 +103,7 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="src\MjpegCapture.cpp" />
 		<Unit filename="src\nn_256-7-1.cpp" />
+		<Unit filename="src\nn_256_5_3_1.cpp" />
 		<Unit filename="src\preprocessing.cpp" />
 		<Extensions>
 			<code_completion />

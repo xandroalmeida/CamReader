@@ -69,7 +69,7 @@
 	"opencv2/core/core_c.h"
 	"opencv2/imgproc/types_c.h"
 
-1323554303 source:c:\users\alexandro\projetos\camreader\main.cpp
+1323606136 source:c:\users\alexandro\projetos\camreader\main.cpp
 	"opencv2/highgui/highgui.hpp"
 	"opencv2/imgproc/imgproc.hpp"
 	"MjpegCapture.h"
@@ -77,6 +77,7 @@
 	<stdio.h>
 	<iostream>
 	<fstream>
+	<vector>
 	<boost/filesystem.hpp>
 	<preprocessing.h>
 
@@ -140,7 +141,7 @@
 	"opencv2/core/core_c.h"
 	"opencv2/imgproc/types_c.h"
 
-1323554303 source:c:\users\alexandro\projetos\camreader\src\mjpegcapture.cpp
+1323554925 source:c:\users\alexandro\projetos\camreader\src\mjpegcapture.cpp
 	"MjpegCapture.h"
 	<iostream>
 	<fstream>
@@ -13747,5 +13748,8 @@
 	<boost/config/abi_suffix.hpp>
 
 1323525348 source:c:\users\alexandro\projetos\camreader\src\nn_256-7-1.cpp
+	<math.h>
+
+1323554866 source:c:\users\alexandro\projetos\camreader\src\nn_256_5_3_1.cpp
 	<math.h>
 

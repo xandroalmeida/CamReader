@@ -142,7 +142,7 @@ MjpegCapture& MjpegCapture::operator >> (cv::Mat& image)
         string frame = ReadUntil(boundary);
         int iend = frame.find(boundary);
         frame = frame.substr(0, iend);
-        ReadUntil("\r\n\r\n") << endl;
+        ReadUntil("\r\n\r\n");
         return frame;
     }
 
