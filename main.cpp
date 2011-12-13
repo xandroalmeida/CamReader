@@ -134,22 +134,24 @@ int main( int argc, char** argv )
     namedWindow("Controles",1);
     namedWindow("Original", 1);
     namedWindow("Contornos", 1);
+    namedWindow("Bordas", 1);
 
     createTrackbar("blur_ksize", "Controles", &blur_ksize, 30, onChangeParam);
     createTrackbar("threshold_thresh", "Controles", &threshold_thresh, 200, onChangeParam);
     createTrackbar("roi_size", "Controles", &roi_size, 400, onChangeParam);
 
 
-    MjpegCapture cap("192.168.1.100", "8080", "/videofeed");
-    cap.Open();
+    //MjpegCapture cap("192.168.1.100", "8080", "/videofeed");
+    //cap.Open();
 
     bool updateImage =true;
-    //VideoCapture cap;
-    //cap.open(0);
+    VideoCapture cap;
+    cap.open(0);
     Mat thImg;
     Mat img;
     while (true)
     {
+        //Mat original = imread("identification-03-large.PNG");
         Mat original;
         cap >> original;
 
@@ -163,17 +165,22 @@ int main( int argc, char** argv )
         rectangle(original, p1, p2, Scalar(255,0,0));
         imshow("Original", original);
 
-        Mat img(original, crop);
+        Mat img(original);
+
+        Mat borders(original);
 
         blur(img, img, Size(blur_ksize+1, blur_ksize+1));
         cvtColor(img, img, CV_BGR2GRAY);
         threshold(img, thImg,threshold_thresh,255,THRESH_BINARY) ;
 
+        Canny(img, borders, 30,40);
         NumericOCR ocr(thImg);
         if (updateImage)
         {
             imshow("threshold", thImg);
             imshow("Contornos", ocr.drawContours());
+            imshow("Bordas", borders);
+
             //updateImage = false;
         }
 

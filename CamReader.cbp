@@ -35,14 +35,12 @@
 					<Add library="$(#mingw_home)\lib\libavifil32.a" />
 					<Add library="$(#mingw_home)\lib\libavicap32.a" />
 					<Add library="$(#mingw_home)\lib\libvfw32.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\libzlibd.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibtiffd.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjasperd.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjpegd.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibpngd.a" />
 					<Add library="$(#boost_home)\stage\lib\libboost_iostreams-$(#cc_version)-mt-d-$(#boost_version).a" />
 					<Add library="$(#boost_home)\stage\lib\libboost_system-$(#cc_version)-mt-d-$(#boost_version).a" />
 					<Add library="$(#boost_home)\stage\lib\libboost_filesystem-$(#cc_version)-mt-d-$(#boost_version).a" />
+					<Add library="$(#qt_home)\lib\libQtCored4.a" />
+					<Add library="$(#qt_home)\lib\libQtGuid4.a" />
+					<Add library="$(#qt_home)\lib\libQtTestd4.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -75,14 +73,12 @@
 					<Add library="$(#mingw_home)\lib\libavifil32.a" />
 					<Add library="$(#mingw_home)\lib\libavicap32.a" />
 					<Add library="$(#mingw_home)\lib\libvfw32.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\libzlib.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibtiff.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjasper.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibjpeg.a" />
-					<Add library="$(#opencv_home)\share\OpenCV\3rdparty\lib\liblibpng.a" />
 					<Add library="$(#boost_home)\stage\lib\libboost_iostreams-$(#cc_version)-mt-$(#boost_version).a" />
 					<Add library="$(#boost_home)\stage\lib\libboost_system-$(#cc_version)-mt-$(#boost_version).a" />
 					<Add library="$(#boost_home)\stage\lib\libboost_filesystem-$(#cc_version)-mt-$(#boost_version).a" />
+					<Add library="$(#qt_home)\lib\libQtCore4.a" />
+					<Add library="$(#qt_home)\lib\libQtGui4.a" />
+					<Add library="$(#qt_home)\lib\libQtTest4.a" />
 				</Linker>
 			</Target>
 		</Build>

@@ -74,7 +74,7 @@ IplImage preprocessing(IplImage* imgSrc,int new_width, int new_height){
 	CvMat data;
 	CvMat dataA;
 	CvRect bb;//bounding box
-	CvRect bba;//boundinb box maintain aspect ratio
+	//CvRect bba;//boundinb box maintain aspect ratio
 
 	//Find bounding box
 	bb=findBB(imgSrc);
