@@ -131,9 +131,9 @@ int main( int argc, char** argv )
     help();
     readParam();
 
-    namedWindow("Controles",1);
-    namedWindow("Original", 1);
-    namedWindow("Contornos", 1);
+    //namedWindow("Controles",1);
+    //namedWindow("Original", 1);
+    //namedWindow("Contornos", 1);
     namedWindow("Bordas", 1);
 
     createTrackbar("blur_ksize", "Controles", &blur_ksize, 30, onChangeParam);
