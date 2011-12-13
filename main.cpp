@@ -28,6 +28,8 @@ using namespace cv;
 using namespace std;
 int blur_ksize = 1;
 int threshold_thresh = 1;
+int roi_size = 10;
+
 
 
 void readParam()
@@ -37,6 +39,7 @@ void readParam()
     {
         fin.read((char*)&blur_ksize, sizeof(blur_ksize));
         fin.read((char*)&threshold_thresh, sizeof(threshold_thresh));
+        fin.read((char*)&roi_size, sizeof(roi_size));
 
         fin.close();
     }
@@ -49,6 +52,7 @@ void onChangeParam(int, void*)
     fout.open("data.bin", ios::out | ios::binary);
     fout.write((char *)(&blur_ksize), sizeof(blur_ksize));
     fout.write((char *)(&threshold_thresh), sizeof(threshold_thresh));
+    fout.write((char *)(&roi_size), sizeof(roi_size));
 
     fout.close();
 }
@@ -127,38 +131,47 @@ int main( int argc, char** argv )
     help();
     readParam();
 
-    namedWindow("Controles");
+    namedWindow("Controles",1);
     namedWindow("Original", 1);
     namedWindow("Contornos", 1);
 
     createTrackbar("blur_ksize", "Controles", &blur_ksize, 30, onChangeParam);
     createTrackbar("threshold_thresh", "Controles", &threshold_thresh, 200, onChangeParam);
+    createTrackbar("roi_size", "Controles", &roi_size, 400, onChangeParam);
 
 
-//    MjpegCapture cap("192.168.1.100", "8080", "/videofeed");
-//    cap.Open();
+    MjpegCapture cap("192.168.1.100", "8080", "/videofeed");
+    cap.Open();
 
     bool updateImage =true;
-    VideoCapture cap;
-    cap.open(0);
+    //VideoCapture cap;
+    //cap.open(0);
     Mat thImg;
+    Mat img;
     while (true)
     {
-        //Mat original;
-        //cap >> original;
-        Mat original = imread("ocr.png",0);
+        Mat original;
+        cap >> original;
 
+        if (roi_size < 5) roi_size = 5;
+        if (roi_size > min(original.cols, original.rows)) roi_size = min(original.cols, original.rows);
+
+        Point p1((original.cols / 2) - (roi_size/2), (original.rows / 2) - (roi_size/3));
+        Point p2((original.cols / 2) + (roi_size/2), (original.rows / 2) + (roi_size/3));
+
+        Rect crop(p1, p2);
+        rectangle(original, p1, p2, Scalar(255,0,0));
         imshow("Original", original);
 
+        Mat img(original, crop);
 
-        blur(original, original, Size(blur_ksize+1, blur_ksize+1));
-        //cvtColor(original, original, CV_BGR2GRAY);
-        threshold(original, thImg,threshold_thresh,255,THRESH_BINARY) ;
+        blur(img, img, Size(blur_ksize+1, blur_ksize+1));
+        cvtColor(img, img, CV_BGR2GRAY);
+        threshold(img, thImg,threshold_thresh,255,THRESH_BINARY) ;
 
         NumericOCR ocr(thImg);
         if (updateImage)
         {
-            imshow("Original", original);
             imshow("threshold", thImg);
             imshow("Contornos", ocr.drawContours());
             //updateImage = false;
