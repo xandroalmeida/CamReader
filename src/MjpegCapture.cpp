@@ -124,42 +124,43 @@ MjpegCapture& MjpegCapture::operator >> (cv::Mat& image)
     char* buffer;
     string sbuffer;
     sbuffer = GetFrame();
-    while (sbuffer.size() < 1000) {
+    while (sbuffer.size() < 1000)
+    {
         sbuffer = GetFrame();
     }
 
-        buffer = new char[sbuffer.length()];
-        memcpy(buffer, sbuffer.data(), sbuffer.length());
-        cv::Mat mat = cv::imdecode(cv::Mat(1, sbuffer.length(), CV_8UC1, buffer), CV_LOAD_IMAGE_UNCHANGED);
+    buffer = new char[sbuffer.length()];
+    memcpy(buffer, sbuffer.data(), sbuffer.length());
+    cv::Mat mat = cv::imdecode(cv::Mat(1, sbuffer.length(), CV_8UC1, buffer), CV_LOAD_IMAGE_UNCHANGED);
 
-        delete buffer;
-        image = mat;
-        return *this;
-    }
+    delete buffer;
+    image = mat;
+    return *this;
+}
 
-    string MjpegCapture::GetFrame()
-    {
-        string frame = ReadUntil(boundary);
-        int iend = frame.find(boundary);
-        frame = frame.substr(0, iend);
-        ReadUntil("\r\n\r\n");
-        return frame;
-    }
+string MjpegCapture::GetFrame()
+{
+    string frame = ReadUntil(boundary);
+    int iend = frame.find(boundary);
+    frame = frame.substr(0, iend);
+    ReadUntil("\r\n\r\n");
+    return frame;
+}
 
-    bool MjpegCapture::Open()
-    {
-        bool hRet = false;
-        boost::asio::ip::tcp::resolver::query query(m_host, m_port);
-        boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-        boost::asio::connect(socket, endpoint_iterator);
-        SendRequest();
+bool MjpegCapture::Open()
+{
+    bool hRet = false;
+    boost::asio::ip::tcp::resolver::query query(m_host, m_port);
+    boost::asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+    boost::asio::connect(socket, endpoint_iterator);
+    SendRequest();
 
-        string response = ReadLine();
-        cout << "response : " << response << endl;
+    string response = ReadLine();
+    cout << "response : " << response << endl;
 
-        response = ReadUntil(";boundary=");
-        boundary = ReadLine();
+    response = ReadUntil(";boundary=");
+    boundary = ReadLine();
 
-        hRet = true;
-        return  hRet;
-    }
+    hRet = true;
+    return  hRet;
+}
